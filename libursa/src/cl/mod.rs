@@ -681,6 +681,7 @@ impl Witness {
         issuance_by_default: bool,
         rev_reg_delta: &RevocationRegistryDelta,
         rev_tails_accessor: &RTA,
+        issued:&BTreeSet<u32>
     ) -> UrsaCryptoResult<Witness>
     where
         RTA: RevocationTailsAccessor,
@@ -690,13 +691,13 @@ impl Witness {
 
         let mut omega = PointG2::new_inf()?;
 
-        let mut issued = if issuance_by_default {
-            (1..=max_cred_num)
-                .filter(|idx| !rev_reg_delta.revoked.contains(idx))
-                .collect::<BTreeSet<u32>>()
-        } else {
-            BTreeSet::from_iter(rev_reg_delta.issued.iter().cloned())
-        };
+        // let mut issued = if issuance_by_default {
+        //     (1..=max_cred_num)
+        //         .filter(|idx| !rev_reg_delta.revoked.contains(idx))
+        //         .collect::<BTreeSet<u32>>()
+        // } else {
+        //     BTreeSet::from_iter(rev_reg_delta.issued.iter().cloned())
+        // };
 
         issued.remove(&rev_idx);
         for j in issued.iter() {
